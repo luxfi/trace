@@ -1,8 +1,0 @@
-Package: node
-Version: 0.1.0
-Section: misc 
-Priority: optional
-Architecture: arm64 
-Depends:
-Maintainer: Fabio Barone <fabio@luxlabs.org>
-Description: The Lux platform binaries 
