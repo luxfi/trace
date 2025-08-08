@@ -2,8 +2,6 @@ module github.com/luxfi/trace
 
 go 1.24.5
 
-toolchain go1.24.5
-
 require (
 	github.com/stretchr/testify v1.10.0
 	go.opentelemetry.io/otel v1.35.0
