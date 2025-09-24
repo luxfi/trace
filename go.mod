@@ -1,6 +1,6 @@
 module github.com/luxfi/trace
 
-go 1.24.5
+go 1.25
 
 require (
 	github.com/stretchr/testify v1.10.0
