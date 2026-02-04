@@ -1,3 +1,5 @@
+//go:build grpc
+
 // Copyright (C) 2019-2025, Lux Industries Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
@@ -19,10 +21,10 @@ const tracerProviderExportCreationTimeout = 5 * time.Second
 type ExporterConfig struct {
 	Type ExporterType `json:"type"`
 
-	// Endpoint to send metrics to. If empty, the default endpoint will be used.
+	// Endpoint to send traces to. If empty, the default endpoint will be used.
 	Endpoint string `json:"endpoint"`
 
-	// Headers to send with metrics
+	// Headers to send with traces
 	Headers map[string]string `json:"headers"`
 
 	// If true, don't use TLS
@@ -44,7 +46,8 @@ func newExporter(config ExporterConfig) (sdktrace.SpanExporter, error) {
 			opts = append(opts, otlptracegrpc.WithInsecure())
 		}
 		client = otlptracegrpc.NewClient(opts...)
-	case HTTP:
+	case HTTP, ZAP:
+		// ZAP falls back to HTTP in gRPC build since both are available
 		opts := []otlptracehttp.Option{
 			otlptracehttp.WithHeaders(config.Headers),
 			otlptracehttp.WithTimeout(tracerExportTimeout),
