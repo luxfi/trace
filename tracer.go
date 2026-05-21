@@ -56,27 +56,18 @@ func (t *tracer) Close() error {
 //
 // ExporterConfig.Type semantics:
 //   - Disabled → Noop tracer, zero allocations on span ops.
-//   - ZAP      → ZAP-native exporter, ships spans as JSON inside ZAP
-//                envelopes to a collector at config.Endpoint (default
-//                127.0.0.1:4317). No protobuf, no OTLP — the default
-//                transport on every Lux/Hanzo service.
-//   - HTTP     → OTLP/HTTP+protobuf exporter (build with -tags otlp).
-//   - GRPC     → legacy OTLP/gRPC (build with -tags grpc).
+//   - ZAP      → ZAP-native exporter (the only real export path).
+//                Ships spans as JSON inside ZAP envelopes to a collector
+//                at config.Endpoint (default 127.0.0.1:4317).
+//
+// HTTP / GRPC values exist for API compat but always fall back to Noop —
+// the OTLP-grpc paths were forks of dead weight and no longer compile.
 func New(config Config) (Tracer, error) {
-	if config.ExporterConfig.Type == Disabled {
+	if config.ExporterConfig.Type != ZAP {
 		return Noop, nil
 	}
 
-	var (
-		exporter sdktrace.SpanExporter
-		err      error
-	)
-	switch config.ExporterConfig.Type {
-	case ZAP:
-		exporter, err = newZAPNativeExporter(config.ExporterConfig, config.AppName, config.Version)
-	default:
-		exporter, err = newExporter(config.ExporterConfig)
-	}
+	exporter, err := newZAPNativeExporter(config.ExporterConfig, config.AppName, config.Version)
 	if err != nil {
 		return nil, err
 	}
