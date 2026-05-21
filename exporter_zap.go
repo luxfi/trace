@@ -1,7 +1,12 @@
-//go:build !grpc
+//go:build !grpc && otlp
 
 // Copyright (C) 2019-2025, Lux Industries Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
+
+// OTLP/HTTP+protobuf exporter. Compiled only with -tags otlp because it
+// pulls go.opentelemetry.io/proto/otlp/* — which transitively requires
+// google.golang.org/protobuf. Default builds use exporter_noop.go and
+// have zero protobuf in the dep graph.
 
 package trace
 
@@ -26,19 +31,6 @@ import (
 )
 
 const tracerProviderExportCreationTimeout = 5 * time.Second
-
-type ExporterConfig struct {
-	Type ExporterType `json:"type"`
-
-	// Endpoint to send traces to. If empty, the default endpoint will be used.
-	Endpoint string `json:"endpoint"`
-
-	// Headers to send with traces
-	Headers map[string]string `json:"headers"`
-
-	// If true, don't use TLS
-	Insecure bool `json:"insecure"`
-}
 
 func newExporter(config ExporterConfig) (sdktrace.SpanExporter, error) {
 	var client otlptrace.Client
