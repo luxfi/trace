@@ -57,11 +57,11 @@ func (t *tracer) Close() error {
 // ExporterConfig.Type semantics:
 //   - Disabled → Noop tracer, zero allocations on span ops.
 //   - ZAP      → ZAP-native exporter — the canonical default. Ships spans
-//                as JSON inside ZAP envelopes to a collector at
-//                config.Endpoint (default 127.0.0.1:4317). No protobuf,
-//                no OTLP, no grpc.
+//     as JSON inside ZAP envelopes to a collector at
+//     config.Endpoint (default 127.0.0.1:4317). No protobuf,
+//     no OTLP, no grpc.
 //   - GRPC / HTTP → legacy OTLP exporter. Requires `-tags grpc`; without it
-//                   we fall back to Noop so the host stays grpc-free.
+//     we fall back to Noop so the host stays grpc-free.
 func New(config Config) (Tracer, error) {
 	if config.ExporterConfig.Type == Disabled {
 		return Noop, nil

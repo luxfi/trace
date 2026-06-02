@@ -65,9 +65,9 @@ type Span struct {
 }
 
 type SpanEvent struct {
-	Name        string         `json:"name"`
-	TimeUnixNs  int64          `json:"timeUnixNs"`
-	Attributes  map[string]any `json:"attributes,omitempty"`
+	Name       string         `json:"name"`
+	TimeUnixNs int64          `json:"timeUnixNs"`
+	Attributes map[string]any `json:"attributes,omitempty"`
 }
 
 // zapExporter implements sdktrace.SpanExporter over a ZAP node connection.
