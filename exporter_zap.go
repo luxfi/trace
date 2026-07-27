@@ -23,10 +23,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
-	"net"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/luxfi/zap"
 	"go.opentelemetry.io/otel/attribute"
@@ -111,9 +109,6 @@ func newZAPNativeExporter(config ExporterConfig, appName, version string) (sdktr
 	// Best-effort connect. Tracing is async and non-critical — if the
 	// collector is unreachable at boot, retry on each ExportSpans call
 	// rather than failing the host process startup.
-	dialCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	_ = dialCtx
-	cancel()
 	exp := &zapExporter{
 		appName:  appName,
 		version:  version,
@@ -292,30 +287,8 @@ func encodeSpanBatch(payload []byte) ([]byte, error) {
 	return b.FinishWithFlags(MsgSpanBatch << 8), nil
 }
 
-// ResolveCollectorAddr is a small DX helper for callers that want to set
-// Endpoint by environment variable. It returns the first non-empty value
-// among the env vars listed in fallback order. Empty string if none set —
-// callers should treat that as "use the default 127.0.0.1:4317".
-func ResolveCollectorAddr(envVars ...string) string {
-	for _, name := range envVars {
-		if v := strings.TrimSpace(envValue(name)); v != "" {
-			return v
-		}
-	}
-	return ""
-}
-
-// envValue is a tiny indirection so the package doesn't directly depend
-// on os.Getenv — keeps the dep graph honest for the audit script and
-// lets tests inject overrides.
-var envValue = func(string) string { return "" }
-
 // Compile-time check.
 var _ sdktrace.SpanExporter = (*zapExporter)(nil)
-
-// freePortHint is exposed only to keep `net` import live for builds that
-// strip the rest of the file under future build-tag splits.
-var _ = net.IPv4zero
 
 // NewZAPExporter returns the ZAP span exporter on its own, for a caller that
 // builds its own TracerProvider.

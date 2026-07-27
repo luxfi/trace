@@ -91,13 +91,13 @@ func TestUnmarshal(t *testing.T) {
 			expected: Disabled,
 		},
 		{
-			name:        "grpc is not a transport",
-			json:        `"grpc"`,
+			name:          "grpc is not a transport",
+			json:          `"grpc"`,
 			expectedError: errUnknownExporterType,
 		},
 		{
-			name:        "http is not a transport",
-			json:        `"http"`,
+			name:          "http is not a transport",
+			json:          `"http"`,
 			expectedError: errUnknownExporterType,
 		},
 		{

@@ -5,6 +5,7 @@ package trace
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"time"
 
@@ -60,7 +61,7 @@ func (t *tracer) Close() error {
 //     spans as JSON inside ZAP envelopes to a collector at
 //     config.Endpoint (default 127.0.0.1:4317). No protobuf,
 //     no OTLP, no grpc.
-//   - anything else → removed. Returns an error directing callers to ZAP.
+//   - anything else → not a transport this package can construct; an error.
 func New(config Config) (Tracer, error) {
 	if config.ExporterConfig.Type == Disabled {
 		return Noop, nil
@@ -74,7 +75,7 @@ func New(config Config) (Tracer, error) {
 	case ZAP:
 		exporter, err = newZAPNativeExporter(config.ExporterConfig, config.AppName, config.Version)
 	default:
-		exporter, err = newExporter(config.ExporterConfig)
+		err = fmt.Errorf("%w: %d", errUnknownExporterType, config.ExporterConfig.Type)
 	}
 	if err != nil {
 		return nil, err

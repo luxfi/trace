@@ -1,10 +1,6 @@
 // Copyright (C) 2019-2025, Lux Industries Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
-// ExporterConfig lives outside the tagged exporter files because every
-// build configuration (default, -tags otlp, -tags grpc) needs to expose
-// the same configuration type to callers.
-
 package trace
 
 type ExporterConfig struct {
