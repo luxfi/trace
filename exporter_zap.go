@@ -316,3 +316,14 @@ var _ sdktrace.SpanExporter = (*zapExporter)(nil)
 // freePortHint is exposed only to keep `net` import live for builds that
 // strip the rest of the file under future build-tag splits.
 var _ = net.IPv4zero
+
+// NewZAPExporter returns the ZAP span exporter on its own, for a caller that
+// builds its own TracerProvider.
+//
+// New() is the usual entry point and returns a whole Tracer. A service that
+// needs its own resource attributes on the provider — o11y reads columns off
+// them — wants only the exporter, and this is that seam. Same wire either way:
+// a JSON SpanBatch inside a ZAP envelope, no OTLP, no protobuf, no gRPC.
+func NewZAPExporter(cfg ExporterConfig, appName, version string) (sdktrace.SpanExporter, error) {
+	return newZAPNativeExporter(cfg, appName, version)
+}
