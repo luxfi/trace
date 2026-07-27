@@ -9,11 +9,12 @@ import (
 	"strings"
 )
 
+// Exporters this package can construct. ZAP is the transport; there is no
+// other. gRPC, HTTP/protobuf and OTLP are not options here — a build of this
+// package pulls none of them.
 const (
 	Disabled ExporterType = iota
-	GRPC
-	HTTP
-	ZAP // ZAP-based OTLP transport (default, no gRPC dependency)
+	ZAP
 )
 
 var (
@@ -25,10 +26,6 @@ func ExporterTypeFromString(exporterTypeStr string) (ExporterType, error) {
 	switch strings.ToLower(exporterTypeStr) {
 	case "disabled":
 		return Disabled, nil
-	case "grpc":
-		return GRPC, nil
-	case "http":
-		return HTTP, nil
 	case "zap":
 		return ZAP, nil
 	default:
@@ -77,10 +74,6 @@ func (t ExporterType) toString() (string, bool) {
 	switch t {
 	case Disabled:
 		return "disabled", true
-	case GRPC:
-		return "grpc", true
-	case HTTP:
-		return "http", true
 	case ZAP:
 		return "zap", true
 	default:

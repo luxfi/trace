@@ -3,7 +3,7 @@
 
 // Legacy OTLP exporter is gone. ZAP-native is the only real export
 // path (tracer.go.New dispatches Type=ZAP to newZAPNativeExporter).
-// Type=GRPC / Type=HTTP fall through to newExporter and resolve to an
+// Any type other than ZAP falls through to newExporter and resolves to an
 // error so callers see a clear migration message instead of a
 // silently-noop tracer.
 

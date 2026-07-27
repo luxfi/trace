@@ -27,16 +27,6 @@ func TestMarshal(t *testing.T) {
 			expected: `"disabled"`,
 		},
 		{
-			name:     "grpc",
-			exporter: GRPC,
-			expected: `"grpc"`,
-		},
-		{
-			name:     "http",
-			exporter: HTTP,
-			expected: `"http"`,
-		},
-		{
 			name:     "zap",
 			exporter: ZAP,
 			expected: `"zap"`,
@@ -101,14 +91,14 @@ func TestUnmarshal(t *testing.T) {
 			expected: Disabled,
 		},
 		{
-			name:     "grpc",
-			json:     `"grpc"`,
-			expected: GRPC,
+			name:        "grpc is not a transport",
+			json:        `"grpc"`,
+			expectedError: errUnknownExporterType,
 		},
 		{
-			name:     "http",
-			json:     `"http"`,
-			expected: HTTP,
+			name:        "http is not a transport",
+			json:        `"http"`,
+			expectedError: errUnknownExporterType,
 		},
 		{
 			name:     "zap",
