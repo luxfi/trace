@@ -52,10 +52,8 @@ func TestZAPNativeExporterRoundTrip(t *testing.T) {
 	defer srv.Stop()
 
 	tracer, err := trace.New(trace.Config{
-		ExporterConfig: trace.ExporterConfig{
-			Type:     trace.ZAP,
-			Endpoint: fmt.Sprintf("127.0.0.1:%d", port),
-		},
+		Type:            trace.ZAP,
+		Endpoint:        fmt.Sprintf("127.0.0.1:%d", port),
 		AppName:         "trace-test",
 		Version:         "v0.0.0",
 		TraceSampleRate: 1,

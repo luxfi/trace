@@ -1,6 +1,6 @@
 module github.com/luxfi/trace
 
-go 1.26.4
+go 1.27.1
 
 require (
 	github.com/luxfi/zap v1.2.6
